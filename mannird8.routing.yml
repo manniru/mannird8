@@ -1,0 +1,25 @@
+mannird8.registration_form:
+  path: '/form1'
+  defaults:
+    _form:  '\Drupal\mannird8\Form\RegForm'
+    _title: 'Registration form'
+  requirements:
+    _permission: 'access content'
+
+mannird8.reglist:
+  path: '/reglist'
+  defaults:
+    _form:  '\Drupal\mannird8\Form\RegListForm'
+    _title: 'Registration list'
+  requirements:
+    _permission: 'access content'
+
+mannird8.regview:
+  path: '/regview/{id}'
+  defaults:
+    _controller: '\Drupal\mannird8\Controller\DefaultController::regview'
+    _title: 'Registration view'
+  requirements:
+    _permission: 'access content'
+  options:
+    id: \s+

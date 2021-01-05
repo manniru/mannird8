@@ -1,0 +1,5 @@
+name: Mannir Module
+type: module
+description: This is my Drupal Module
+package: Mannir Esystems Limited
+core: 8.x

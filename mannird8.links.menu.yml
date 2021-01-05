@@ -1,0 +1,11 @@
+mannird8.registration_form:
+  title: Registration form
+  route_name: mannird8.registration_form
+  menu_name: main
+  weight: 1
+
+mannird8.reglist:
+  title: Registration list
+  route_name: mannird8.reglist
+  menu_name: main
+  weight: 2
