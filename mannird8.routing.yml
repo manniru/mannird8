@@ -23,3 +23,13 @@ mannird8.regview:
     _permission: 'access content'
   options:
     id: \s+
+
+mannird8.regpdf:
+  path: '/regpdf/{id}'
+  defaults:
+    _controller: '\Drupal\mannird8\Controller\DefaultController::regpdf'
+    _title: 'Registration pdf'
+  requirements:
+    _permission: 'access content'
+  options:
+    id: \s+

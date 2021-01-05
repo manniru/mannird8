@@ -15,7 +15,7 @@ class RegListForm extends FormBase {
 
   public function buildForm(array $form, FormStateInterface $form_state) {
 
-    $header = ['id', 'name', 'age', 'gender', 'view','edit', 'delete'];
+    $header = ['id', 'name', 'age', 'gender', 'view', 'print','edit', 'delete'];
 
     $query = \Drupal::database()->select('_students', 'tb');
     $query->fields('tb');
@@ -25,6 +25,7 @@ class RegListForm extends FormBase {
     $rows = array();
     foreach ($results as $r) {
       $view = Link::fromTextAndUrl('View', new Url('mannird8.regview', ['id' => $r->id], ['attributes' => ['class' => ['button']]]));
+      $print = Link::fromTextAndUrl('Print', new Url('mannird8.regpdf', ['id' => $r->id], ['attributes' => ['class' => ['button']]]));
       $edit = Link::fromTextAndUrl('Edit', new Url('mannird8.regview', ['id' => $r->id], ['attributes' => ['class' => ['button']]]));
       $delete = Link::fromTextAndUrl('Delete', new Url('mannird8.regview', ['id' => $r->id], ['attributes' => ['class' => ['button']]]));
 
@@ -34,6 +35,7 @@ class RegListForm extends FormBase {
         'age' => $r->age,
         'gender' => $r->gender,
         'view' => $view,
+        'print' => $print,
         'edit' => $edit,
         'delete' => $delete,
       ];
