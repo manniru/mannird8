@@ -57,6 +57,8 @@ class RegListForm extends FormBase {
       '#value' => $this->t('Submit'),
     ];
 
+    $form['actions']['export'] = ['#type' => 'submit', '#value' => $this->t('Export'),];
+
     return $form;
   }
 

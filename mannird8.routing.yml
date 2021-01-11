@@ -33,3 +33,11 @@ mannird8.regpdf:
     _permission: 'access content'
   options:
     id: \s+
+
+mannird8.excel:
+  path: '/excel'
+  defaults:
+    _controller: '\Drupal\mannird8\Controller\DefaultController::excel'
+    _title: 'Export excel'
+  requirements:
+    _permission: 'access content'
