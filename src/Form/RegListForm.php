@@ -15,10 +15,36 @@ class RegListForm extends FormBase {
 
   public function buildForm(array $form, FormStateInterface $form_state) {
 
+    $keyword = $_SESSION['keyword'];
+
+
+
+
+    $form['container'] = [
+      '#type' => 'container',
+      '#attributes' => [
+        'class' => [
+          'accommodation',
+        ],
+      ]
+    ];
+
+    $form['container']['keyword'] = [
+      '#type' => 'textfield',
+      '#title' => $this->t('Search Word'),
+      '#size' => 30,
+    ];
+    $form['container']['actions']['search'] = ['#type' => 'submit', '#value' => $this->t('Search'),];
+    $form['container']['actions']['reset'] = ['#type' => 'submit', '#value' => $this->t('Reset'),];
+
+
     $header = ['id', 'name', 'age', 'gender', 'view', 'print','edit', 'delete'];
 
     $query = \Drupal::database()->select('_students', 'tb');
     $query->fields('tb');
+    if ($keyword) {
+      $query->condition('tb.name', '%'.$keyword.'%', 'LIKE');
+    }
     $pager = $query->extend('Drupal\Core\Database\Query\PagerSelectExtender')->limit(10);
     $results = $pager->execute()->fetchAll();
 
@@ -59,6 +85,13 @@ class RegListForm extends FormBase {
 
     $form['actions']['export'] = ['#type' => 'submit', '#value' => $this->t('Export'),];
 
+
+    if ($keyword) {
+      // $this->messenger()->addMessage($keyword);
+      $form['container']['keyword']['#default_value'] = $keyword;
+    }
+
+
     return $form;
   }
 
@@ -70,7 +103,18 @@ class RegListForm extends FormBase {
   }
 
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    //
+    $op = $form_state->getValue('op');
+    $keyword = $form_state->getValue('keyword');
+    $this->messenger()->addMessage($keyword);
+
+    if ($op == 'Search') {
+      $_SESSION['keyword'] = $keyword;
+    }
+    if ($op == 'Reset') {
+      unset($_SESSION['keyword']);
+    }
+
+
   }
 
 }

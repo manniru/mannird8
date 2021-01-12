@@ -19,15 +19,15 @@ use Drupal\Component\Utility\Unicode;
 //use Nekman\LuhnAlgorithm\LuhnAlgorithmFactory;
 
 use Symfony\Component\HttpFoundation\Response;
-require '/Users/mannir/Sites/d8/vendor/autoload.php';
+// require '/Users/mannir/Sites/d8/vendor/autoload.php';
 
-require '/Users/mannir/Sites/d8/vendor/phpoffice/phpspreadsheet/IOFactory.php';
-require '/Users/mannir/Sites/d8/vendor/phpoffice/phpspreadsheet/Spreadsheet.php';
-require '/Users/mannir/Sites/d8/vendor/phpoffice/phpspreadsheet/Writer/Xlsx.php';
+// require '/Users/mannir/Sites/d8/vendor/phpoffice/phpspreadsheet/IOFactory.php';
+// require '/Users/mannir/Sites/d8/vendor/phpoffice/phpspreadsheet/Spreadsheet.php';
+// require '/Users/mannir/Sites/d8/vendor/phpoffice/phpspreadsheet/Writer/Xlsx.php';
 
-use PhpOffice\PhpSpreadsheet\IOFactory;
-use PhpOffice\PhpSpreadsheet\Spreadsheet;
-use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+// use PhpOffice\PhpSpreadsheet\IOFactory;
+// use PhpOffice\PhpSpreadsheet\Spreadsheet;
+// use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
 class DefaultController extends ControllerBase {
 
@@ -126,6 +126,7 @@ class DefaultController extends ControllerBase {
     ];
   }
 
+  /*
   public function excel() {
 
     $spreadsheet = new Spreadsheet();
@@ -150,7 +151,7 @@ class DefaultController extends ControllerBase {
     // header('Content-Disposition: attachment; filename=spreadsheet.xlsx'); /*-- $filename is  xsl filename ---*/
     // header('Cache-Control: max-age=0');
 
-
+/*
     
     // Create new Spreadsheet object
     $spreadsheet = new Spreadsheet();
@@ -194,4 +195,5 @@ class DefaultController extends ControllerBase {
     return $response;
 
   }
+  */
 }

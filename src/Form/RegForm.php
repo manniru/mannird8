@@ -36,7 +36,7 @@ class RegForm extends FormBase {
 
     $path = 'http://mannir.net/mannir.jpg';
 
-    $form['f1']['photo1'] = [ '#markup' => "<img src='$path' width='100' height='100' alt='Photo'/>" ];
+    // $form['f1']['photo1'] = [ '#markup' => "<img src='$path' width='100' height='100' alt='Photo'/>" ];
 
       $form['f1']['photo'] = [
         '#type' => 'managed_file',
@@ -49,7 +49,7 @@ class RegForm extends FormBase {
         '#default_value' => isset($reg->photo) ? [$reg->photo] : '',
         // '#default_value' => array($reg->photo),
         // '#default_value' => array($reg->photo),
-        '#required' => TRUE,
+        // '#required' => TRUE,
         // '#default_value' => $this->get('photo'),
 
         // '#upload_location' => 'public://photos/',
