@@ -13,6 +13,10 @@ class RegForm extends FormBase {
 
   public function buildForm(array $form, FormStateInterface $form_state) {
 
+    $faker = \Faker\Factory::create();
+
+    $this->messenger()->addMessage($faker->name);
+
     $form['name'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Name'),
@@ -72,6 +76,16 @@ class RegForm extends FormBase {
       '#value' => $this->t('Submit'),
     ];
 
+    $form['actions']['demo'] = [
+      '#type' => 'submit',
+      '#value' => $this->t('Demo'),
+    ];
+
+    $form['actions']['generate'] = [
+      '#type' => 'submit',
+      '#value' => $this->t('Generate'),
+    ];
+
     return $form;
   }
 
@@ -83,21 +97,86 @@ class RegForm extends FormBase {
   }
 
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    $name = $form_state->getValue('name');
-    $age = $form_state->getValue('age');
-    $gender = $form_state->getValue('gender');
-    $dob = 2020 - $age;
-    $this->messenger()->addMessage("Welcome $name, Your Age is $age, Year of Birth $dob");
+    $faker = \Faker\Factory::create();
 
-    $fields = [
-      'name' => $name,
-      'age' => $age,
-      'gender' => $gender,
-    ];
-    $query = \Drupal::database()->insert('_students');
-    $query->fields($fields);
+    $op = $form_state->getValue('op');
+
+    if ($op == 'Submit') {
+      $name = $form_state->getValue('name');
+      $age = $form_state->getValue('age');
+      $gender = $form_state->getValue('gender');
+      $dob = 2020 - $age;
+      $this->messenger()->addMessage("Welcome $name, Your Age is $age, Year of Birth $dob");
+  
+      $fields = [
+        'name' => $name,
+        'age' => $age,
+        'gender' => $gender,
+      ];
+      $query = \Drupal::database()->insert('_students');
+      $query->fields($fields);
+      $query->execute();
+  
+    }
+
+    if ($op == 'Demo') {
+
+      $student = [
+        'name' => $faker->name,
+        'age' => $faker->numberBetween($min = 18, $max=30),
+        'gender' => $faker->randomElement(['Male', 'Female']),
+      ];
+
+      $query = \Drupal::database()->insert('_students');
+      $query->fields($student);
+      $query->execute();
+        
+      //print('<pre>' . print_r($student, TRUE) . '</pre>'); exit();
+
+
+      $_SESSION['student'] = (object) $student;
+
+    
+      \Drupal::messenger()->addMessage($student, TRUE);
+
+    }
+
+    if ($op == 'Generate') {
+      $values = [];
+
+      // $random_names = ['Auwal', 'Sani', 'Salisu', 'Rabiu', 'Khamisu', 'Sadisu', 'Sabiu', 'Tasiu'];
+
+      for ($i=1; $i <= 1000; $i++) { 
+        $values[] = [
+          'name' => $faker->name,
+          'age' => $faker->numberBetween($min = 18, $max=30),
+          'gender' => $faker->randomElement(['Male', 'Female']),
+        ];
+      }
+      
+      //  print('<pre>' . print_r($values, TRUE) . '</pre>'); exit();
+
+    // $this->database->truncate('_employee')->execute();
+    
+    $query = \Drupal::database()->insert('_students')->fields(['name', 'age', 'gender']);
+    foreach ($values as $record) {
+        $query->values($record);
+    }
+    
+    
     $query->execute();
+        
+      //print('<pre>' . print_r($student, TRUE) . '</pre>'); exit();
 
+
+      $_SESSION['student'] = (object) $student;
+
+    
+      \Drupal::messenger()->addMessage($student, TRUE);
+
+    }
+
+    
 
   }
 

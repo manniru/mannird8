@@ -45,7 +45,7 @@ class RegListForm extends FormBase {
     if ($keyword) {
       $query->condition('tb.name', '%'.$keyword.'%', 'LIKE');
     }
-    $pager = $query->extend('Drupal\Core\Database\Query\PagerSelectExtender')->limit(10);
+    $pager = $query->extend('Drupal\Core\Database\Query\PagerSelectExtender')->limit(20);
     $results = $pager->execute()->fetchAll();
 
     $rows = array();
@@ -84,6 +84,7 @@ class RegListForm extends FormBase {
     ];
 
     $form['actions']['export'] = ['#type' => 'submit', '#value' => $this->t('Export'),];
+    $form['actions']['deleteall'] = ['#type' => 'submit', '#value' => $this->t('Delete All'),];
 
 
     if ($keyword) {
@@ -91,6 +92,7 @@ class RegListForm extends FormBase {
       $form['container']['keyword']['#default_value'] = $keyword;
     }
 
+    $form['pager'] = ['#type' => 'pager'];
 
     return $form;
   }
@@ -112,6 +114,10 @@ class RegListForm extends FormBase {
     }
     if ($op == 'Reset') {
       unset($_SESSION['keyword']);
+    }
+
+    if ($op == 'Delete All') {
+      \Drupal::database()->truncate('_students')->execute();
     }
 
 
