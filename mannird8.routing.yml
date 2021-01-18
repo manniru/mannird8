@@ -41,3 +41,13 @@ mannird8.regpdf:
 #     _title: 'Export excel'
 #   requirements:
 #     _permission: 'access content'
+
+mannird8.idcard:
+  path: '/idcard/{id}'
+  defaults:
+    _controller: '\Drupal\mannird8\Controller\DefaultController::idcard'
+    _title: 'IDCard pdf'
+  requirements:
+    _permission: 'access content'
+  options:
+    id: \s+

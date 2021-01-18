@@ -2,6 +2,7 @@
 
 namespace Drupal\mannird8\Controller;
 
+require 'vendor/setasign/fpdf/fpdf.php';
 
 
 use Drupal\Core\Controller\ControllerBase;
@@ -19,7 +20,6 @@ use Drupal\Component\Utility\Unicode;
 //use Nekman\LuhnAlgorithm\LuhnAlgorithmFactory;
 
 use Symfony\Component\HttpFoundation\Response;
-// require '/Users/mannir/Sites/d8/vendor/autoload.php';
 
 // require '/Users/mannir/Sites/d8/vendor/phpoffice/phpspreadsheet/IOFactory.php';
 // require '/Users/mannir/Sites/d8/vendor/phpoffice/phpspreadsheet/Spreadsheet.php';
@@ -78,7 +78,7 @@ class DefaultController extends ControllerBase {
 
     $pdf->AddPage();
 
-    $pdf->Image('modules/custom/mannir/mannird8/bg2.jpg',0,0, 210, 135);
+    $pdf->Image('modules/mannir/mannird8/assets/bg.png',0,0, 210, 135);
 
 
     $pdf->SetFont('Arial','B',16);
@@ -91,7 +91,7 @@ class DefaultController extends ControllerBase {
     $pdf->Cell(0,15,'ONLINE REGISTRATION FORM', 0, 0, 'C');
     
     $pdf->Ln();
-    $pdf->Image('modules/custom/mannir/mannird8/mannir.jpg',70,35, 20, 20);
+    $pdf->Image('modules/mannir/mannird8/assets/mannir.jpg',70,35, 20, 20);
 
 
     $pdf->Ln();
@@ -196,4 +196,67 @@ class DefaultController extends ControllerBase {
 
   }
   */
+
+
+
+  public function idcard($id = null)
+  {
+    $student = \Drupal::database()->query("select * from _students where id = $id")->fetchObject();
+
+    $pdf = new \FPDF('L','mm',array(53.98, 85.60));
+
+    $pdf->AddPage();
+    $pdf->SetMargins(2, 2, 2);
+
+    $pdf->Image('modules/mannir/mannird8/assets/idcard.jpg',0,0, 85.60, 53.98);
+
+    $pdf->Ln(-10);
+    $pdf->SetFont('Arial','B',12);
+    // $pdf->Image('http://buk.edu.ng/sites/all/themes/responsive_green/logo.png',30,20, 100);
+
+    $pdf->SetTextColor(255, 255, 255);
+    $pdf->Cell(0,10,'BAYERO UNIVERSITY KANO', 0, 0, 'C');
+    $pdf->SetFont('Arial','B',8);
+    $pdf->SetTextColor(255, 255, 255);
+    $pdf->SetFont('Arial','B',8);
+    $pdf->Ln(7);
+    $pdf->Cell(0,5,'STUDENT IDCARD', 0, 0, 'C');
+  
+
+    $pdf->Ln();
+    $w = 30;
+    $w2 = 30;
+    $h = 3;
+    $pdf->Cell($w,$h,'Registration Number:', 1, 0);
+    $pdf->Cell($w2,$h,$student->id, 1, 0);
+    $pdf->Ln();
+    $pdf->Cell($w,$h,'Student Name', 1, 0);
+    $pdf->Cell($w2,$h,$student->name, 1, 0);
+    $pdf->Ln();
+    $pdf->Cell($w,$h,'Student Age', 1, 0);
+    $pdf->Cell($w2,$h,$student->age, 1, 0);
+    $pdf->Ln();
+    $pdf->Cell($w,$h,'Date Register', 1, 0);
+    $pdf->Cell($w2,$h, $student->datetime, 1, 0);
+    $pdf->Ln();
+    $pdf->Cell($w,$h,'Print Date', 1, 0);
+    $pdf->Cell($w2,$h, date('d/m/Y h:m:i'), 1, 0);
+    $pdf->Ln();
+    $pdf->Cell($w,$h,'Millisecon', 1, 0);
+    $pdf->Cell($w2,$h, round(microtime(true) * 1000), 1, 0);
+
+    $pdf->Image('modules/mannir/mannird8/assets/audu.jpg',70,35, 20, 20);
+
+    $pdf->SetTextColor(0, 0, 0);
+    // $pdf->Ln(-60);
+
+  $pdf->MultiCell(50, 80, "SAMPLE TEXT");
+    $pdf->Output();
+    exit();
+
+    return [
+      '#type' => 'markup',
+      '#markup' => "RegPDF Welcome $student->name <br /> Your Age: $student->age <br /> Gender: $student->gender"
+    ];
+  }
 }
