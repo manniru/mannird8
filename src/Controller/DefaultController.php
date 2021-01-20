@@ -28,6 +28,7 @@ use Symfony\Component\HttpFoundation\Response;
 // use PhpOffice\PhpSpreadsheet\IOFactory;
 // use PhpOffice\PhpSpreadsheet\Spreadsheet;
 // use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+use Drupal\file\Entity\File;
 
 class DefaultController extends ControllerBase {
 
@@ -89,7 +90,7 @@ class DefaultController extends ControllerBase {
     $pdf->SetFont('Arial','B',12);
 
     $pdf->Cell(0,15,'ONLINE REGISTRATION FORM', 0, 0, 'C');
-    
+
     $pdf->Ln();
     $pdf->Image('modules/mannir/mannird8/assets/mannir.jpg',70,35, 20, 20);
 
@@ -152,10 +153,10 @@ class DefaultController extends ControllerBase {
     // header('Cache-Control: max-age=0');
 
 /*
-    
+
     // Create new Spreadsheet object
     $spreadsheet = new Spreadsheet();
-    
+
     // Set workbook properties
     $spreadsheet->getProperties()->setCreator('Rob Gravelle')
                 ->setLastModifiedBy('Rob Gravelle')
@@ -165,7 +166,7 @@ class DefaultController extends ControllerBase {
                 ->setKeywords('Microsoft office 2013 php PhpSpreadsheet')
                 ->setCategory('Test file');
 
-    //Set active sheet index to the first sheet, 
+    //Set active sheet index to the first sheet,
     //and add some data
     $spreadsheet->setActiveSheetIndex(0)
                 ->setCellValue('A1', 'This')
@@ -178,7 +179,7 @@ class DefaultController extends ControllerBase {
 
     // Set active sheet index to the first sheet, so Excel opens this as the first sheet
     $spreadsheet->setActiveSheetIndex(0);
- 
+
     $writer = IOFactory::createWriter($spreadsheet, 'Xlsx');
 
     $path = \Drupal::service('file_system')->realpath(file_default_scheme() . "://");
@@ -208,7 +209,7 @@ class DefaultController extends ControllerBase {
     $pdf->AddPage();
     $pdf->SetMargins(2, 2, 2);
 
-    $pdf->Image('modules/mannir/mannird8/assets/idcard.jpg',0,0, 85.60, 53.98);
+    $pdf->Image('modules/custom/mannir/mannird8/assets/idcard2.jpg',0,0, 85.60, 53.98);
 
     $pdf->Ln(-10);
     $pdf->SetFont('Arial','B',12);
@@ -221,7 +222,7 @@ class DefaultController extends ControllerBase {
     $pdf->SetFont('Arial','B',8);
     $pdf->Ln(7);
     $pdf->Cell(0,5,'STUDENT IDCARD', 0, 0, 'C');
-  
+
 
     $pdf->Ln();
     $w = 30;
@@ -245,12 +246,30 @@ class DefaultController extends ControllerBase {
     $pdf->Cell($w,$h,'Millisecon', 1, 0);
     $pdf->Cell($w2,$h, round(microtime(true) * 1000), 1, 0);
 
-    $pdf->Image('modules/mannir/mannird8/assets/audu.jpg',70,35, 20, 20);
+    // PHOT START
+    if(isset($student->photo)) {
+      $file = File::load($student->photo);
+      if($file) {
+        $file_uri = $file->getFileUri();
+        $file_name = $file->getFilename();
+        $image_path = file_url_transform_relative(file_create_url($file_uri));
+        $pdf->Image($file_uri,70,35, 20, 20);
+      }
+    }
+
+    $text = $journalName = preg_replace('/\s+/', '_', $student->name);
+
+
+    // PHOTO END
+
+    $pdf->AddPage();
 
     $pdf->SetTextColor(0, 0, 0);
     // $pdf->Ln(-60);
 
-  $pdf->MultiCell(50, 80, "SAMPLE TEXT");
+    $pdf->Cell(2,2,'SAMPLE TEXT', 0, 0);
+    $pdf->Image('https://chart.apis.google.com/chart?cht=qr&chs=450x450&chl='.$text.'.png',5,20,30);
+
     $pdf->Output();
     exit();
 

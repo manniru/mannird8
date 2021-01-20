@@ -6,6 +6,7 @@ use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Link;
 use Drupal\Core\Url;
+use Drupal\file\Entity\File;
 
 class RegListForm extends FormBase {
 
@@ -38,7 +39,7 @@ class RegListForm extends FormBase {
     $form['container']['actions']['reset'] = ['#type' => 'submit', '#value' => $this->t('Reset'),];
 
 
-    $header = ['id', 'name', 'age', 'gender', 'view', 'print','edit', 'delete'];
+    $header = ['photo', 'id', 'name', 'age', 'gender', 'view', 'print','edit', 'delete'];
 
     $query = \Drupal::database()->select('_students', 'tb');
     $query->fields('tb');
@@ -55,7 +56,33 @@ class RegListForm extends FormBase {
       $edit = Link::fromTextAndUrl('Edit', new Url('mannird8.regview', ['id' => $r->id], ['attributes' => ['class' => ['button']]]));
       $delete = Link::fromTextAndUrl('Delete', new Url('mannird8.regview', ['id' => $r->id], ['attributes' => ['class' => ['button']]]));
 
+
+      // PHOTO START
+      if(isset($r->photo)) {
+
+        $file = File::load($r->photo);
+
+        if($file) {
+          $file_uri = $file->getFileUri();
+          $file_name = $file->getFilename();
+          $image_path = file_url_transform_relative(file_create_url($file_uri));
+          $photo = ['data' => [
+            '#theme' => 'image_style',
+            '#style_name' => 'thumbnail',
+            '#uri' => $file_uri,
+            // optional parameters
+            '#width' => 100,
+            '#height' => 100,
+        ] ];
+
+          // \Drupal::logger('mannirtrs_file')->notice(print_r($image_path, TRUE));
+        }
+      }
+
+      // PHOTO END
+
       $rows[$r->id] = [
+        'photo' => $photo,
         'id' => $r->id,
         'name' => $r->name,
         'age' => $r->age,
